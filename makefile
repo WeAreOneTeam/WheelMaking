@@ -9,13 +9,13 @@ CFLAG = $(MACRO) -Wall -std=c++11 #-Wno-deprecated-declarations
 RM = rm -rf
 
 ${EXE}: ${OBJS}
-@$(CC) $(CFLAG) -o ${EXE} ${OBJS}
-@echo build ${EXE} success.
+	@$(CC) $(CFLAG) -o ${EXE} ${OBJS}
+	@echo build ${EXE} success.
 
 # “$<”表示所有的依赖目标集,也就是%.cpp
 # “$@”表示目标集,也就是%.o
 %.o: %.cpp
-@$(CC) $(CFLAG) -c ${INCLUDE_DIR} $< -o $@
+	@$(CC) $(CFLAG) -c ${INCLUDE_DIR} $< -o $@
 
 clean:
-$(RM) -rf ${EXE} ${OBJS}
+	$(RM) -rf ${EXE} ${OBJS}
