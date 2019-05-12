@@ -1,5 +1,5 @@
 CC = g++
-EXE = simpleTPDemo
+EXE = wheel
 SRCS = $(wildcard *.cpp)
 OBJS = $(patsubst %.cpp,%.o,${SRCS})
 INCLUDE_DIR = -I./
