@@ -1,10 +1,10 @@
 CC = g++
 EXE = wheel
-SRCS = $(wildcard *.cpp)
+SRCS = $(wildcard *.cpp) $(wildcard mempool/*.cpp)
 OBJS = $(patsubst %.cpp,%.o,${SRCS})
 INCLUDE_DIR = -I./
 MACRO = -DUSE_ATOMIC #是否使用C++11的原子操作
-CFLAG = $(MACRO) -Wall -std=c++11 #-Wno-deprecated-declarations
+CFLAG = $(MACRO) -Wall -std=c++11 -g #-Wno-deprecated-declarations
 
 RM = rm -rf
 
@@ -18,4 +18,4 @@ ${EXE}: ${OBJS}
 	@$(CC) $(CFLAG) -c ${INCLUDE_DIR} $< -o $@
 
 clean:
-	$(RM) -rf ${EXE} ${OBJS}
+	$(RM) ${EXE} ${OBJS}
