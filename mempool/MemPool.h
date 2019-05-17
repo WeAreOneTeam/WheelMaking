@@ -11,12 +11,12 @@
 
 #include <stdio.h>
 
-typedef unsigned int __UINT32;
+#include "commondefine.h"
 
 typedef struct
 {
     __UINT32 size: 30;
-    __UINT32 flag: 2;
+    __UINT32 flag: 2; // bit0:是否为空  bit1:前一块是否为空
 } BlockHeader;
 
 class MemPool
@@ -25,9 +25,9 @@ public:
     MemPool();
     ~MemPool();
     
-    void init(size_t size);
+    bool init(size_t size);
     
-    void extend(size_t size);
+    bool extend(size_t size);
     
     void* mp_malloc(size_t size);
     
@@ -36,7 +36,8 @@ public:
 protected:
     
 private:
-    void* header;
+    char* header;
+    char* tail;
     
     __UINT32 m_dwInitSize;
     
