@@ -36,12 +36,14 @@ bool MemPool::init(size_t dwords)
     theLog.info("malloc memory success.");
     
     // 隐式链表头
-    BlockHeader& bh = *((BlockHeader*)header);
-    bh.size = dwSize | 0x2; // 默认前一块不为空，这样就不需要合并，方便处理
+    //BlockHeader& bh = *((BlockHeader*)header);
+    //bh.size = dwSize | 0x2; // 默认前一块不为空，这样就不需要合并，方便处理
+    SET(HDRP(header), PACK(dwSize, 1, 0));
     
     // 隐式链表尾
-    BlockHeader& bt = *((BlockHeader*)(header + dwSize - DWORD_SIZE));
-    bt.size = dwSize * DWORD_SIZE | 0x2; // 默认前一块不为空，这样就不需要合并，方便处理
+    //BlockHeader& bt = *((BlockHeader*)(header + dwSize - DWORD_SIZE));
+    //bt.size = dwSize * DWORD_SIZE | 0x2; // 默认前一块不为空，这样就不需要合并，方便处理
+    SET(FTRP(header), PACK(dwSize, 1, 0));
     
     return true;
 }
@@ -53,12 +55,35 @@ bool MemPool::extend(size_t size)
     return true;
 }
 
+void MemPool::mp_merge()
+{
+    
+}
+
+void* MemPool::find_first_fit(void* p)
+{
+    
+    return NULL;
+}
+
+void* MemPool::find_next_fit(void* p)
+{
+    return NULL;
+}
+
+void* MemPool::find_best_fit(void* p)
+{
+    return NULL;
+}
+
 void* MemPool::mp_malloc(size_t size)
 {
     return NULL;
 }
 
-void MemPool::mp_free(void * p)
+void MemPool::mp_free(void* p)
 {
-    
 }
+
+
+
