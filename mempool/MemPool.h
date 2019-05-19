@@ -32,7 +32,8 @@
 
 // whether the block p is the end of the memory pool
 // the end block header: size = 0 and flag bit0 is 1, the bit1 depends
-#define IS_END(p)         ((GET(p) & ~0x2) == ~0x2)
+// attention: the end of the mem pool, inuse = 1
+#define IS_END(p)         ((GET(p) & ~0x2) == 0x1)
 
 // the real address of variable
 #define REAL(p)            ((char *)(p) + DWORD_SIZE)
@@ -47,8 +48,7 @@
 
 /**************** p is point to the real address of variable ****************/
 // [HEADER][VARIABLE][FOOTER]
-#define HDRP(p)           ((char *)(p) - DWORD_SIZE)
-#define FTRP(p)           ((char *)(p) + GET_SIZE(HDRP(p)) - DWORD_SIZE * 2)
+#define HDRP(rp)           ((char *)(rp) - DWORD_SIZE)
 
 // 位域的比特序：分配位域存储地址(字节内bit地址)，从字节内 低bit地址开始分配
 typedef struct
@@ -71,6 +71,7 @@ public:
     void* mp_malloc(__UINT32 size);
     void mp_free(void* rp);
     
+    void showBlockHeaderInfo(void* bp, const char* szBlockTypeDesc);
     void displayMem();
     
     void test();
@@ -81,8 +82,8 @@ private:
     char* header;
     
     // the range of real address
-    __UINT32 m_dwMinRealAddr;
-    __UINT32 m_dwMaxRealAddr;
+    void* m_pMinRealAddr;
+    void* m_pMaxRealAddr;
     
 private:    
     void* find_first_fit(void* bp, __UINT32 size);

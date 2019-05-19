@@ -16,8 +16,8 @@
 MemPool::MemPool()
 {
     header = NULL;
-    m_dwMinRealAddr = 0;
-    m_dwMaxRealAddr = 0;
+    m_pMinRealAddr = NULL;
+    m_pMaxRealAddr = NULL;
 }
 
 MemPool::~MemPool() 
@@ -47,7 +47,11 @@ bool MemPool::init(__UINT32 dwords)
     SET(FTR(header), PACK(dwSize - DWORD_SIZE, 1, 0));
     
     // the end of the implicit linked memory list
-    SET(FTRP(header) + DWORD_SIZE, PACK(0, 0, 1));
+    SET(FTR(header) + DWORD_SIZE, PACK(0, 0, 1));
+    
+    m_pMinRealAddr = header;
+    m_pMaxRealAddr = FTR(header);
+    displayMem();
     
     return true;
 }
@@ -122,6 +126,7 @@ void* MemPool::mp_malloc(__UINT32 size)
         SET(NEXT(bpAddr), PACK(dwOldSize - dwNewSize, 1, 0));
         SET(FTR(NEXT(bpAddr)), PACK(dwOldSize - dwNewSize, 1, 0));
     }
+    displayMem();
     
     return (void*)REAL(bpAddr);
 }
@@ -198,16 +203,39 @@ void MemPool::mp_free(void* rp)
     return ;
 }
 
+void MemPool::showBlockHeaderInfo(void* bp, const char* szBlockTypeDesc)
+{
+    char logStr[MAX_LOG_BUFF_LEN] = {0};
+    (void)snprintf(logStr, MAX_LOG_BUFF_LEN, "[addr=%p] [val=0x%08x] [%s] [size=%2d] [preinuse=%d] [inuse=%d].", bp, GET(bp), szBlockTypeDesc, GET_SIZE(bp), !!PRE_USE_FLAG(bp), USE_FLAG(bp));
+    theLog.info(logStr);
+}
+
 void MemPool::displayMem()
 {
     /***************************************************************************************************************
-    [address] [hex value] [header|footer|variab] [size=%d] [preInUSE=true|false] [inuse=true|false]
+    [address] [hex value] [header|footer|variab] [size=%d] [preinuse=true|false] [inuse=true|false]
     ***************************************************************************************************************/
+    char* bpTmp = (char*)header;
+    
+    theLog.info("###########################################################");
+    while(!IS_END(bpTmp))
+    {
+        showBlockHeaderInfo(bpTmp, "header");
+        // if the block header is in use, there will be no block footer(save space)
+        if(!USE_FLAG(bpTmp))
+        {
+        	showBlockHeaderInfo(FTR(bpTmp), "footer");
+        }
+        
+        bpTmp = NEXT(bpTmp);
+    }
+    showBlockHeaderInfo(bpTmp, "   end");
+    theLog.info("###########################################################\n");
 }
 
 void MemPool::test()
 {
-    init(10);
+    init(45);
     TestObject* obj = NULL;
     //TestObject* obj = (TestObject*)mp_malloc(sizeof(TestObject));
     //printf("%p\n", obj);
