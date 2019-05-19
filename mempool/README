@@ -17,3 +17,7 @@ BlockHeader
 
 空闲的块首位都有一个BlockHeader，方便合并前面的块
 正在使用的块只有首部有一个BlockHeader
+
+关键词：
+block header: 内存块头
+real address: 变量使用的真正地址，即内存块头+DWORD_SIZE

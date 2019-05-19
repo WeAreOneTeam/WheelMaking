@@ -7,9 +7,14 @@
 //
 
 #include <iostream>
+#include "MemPool.h"
+#include "Logger.h"
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     std::cout << "Hello, Mem Pool!\n";
+    MemPool mp;
+    mp.test();
+    delete Logger::getInstance();
     return 0;
 }

@@ -19,10 +19,12 @@ Logger::Logger()
 {
     m_szLogBuff[0] = 0;
     m_enOutType = OutType_CMD;
+    printf("construct Logger.\n");
 }
 
 Logger::~Logger()
 {
+    printf("destruct Logger.\n");
 }
 
 Logger* Logger::getInstance()
@@ -43,7 +45,7 @@ void Logger::getCurLocalTime(char* pszCurTime)
 {
     time_t tt = time(NULL);//这句返回的只是一个时间cuo
     tm* t= localtime(&tt);
-    snprintf(pszCurTime, MAX_TIME_LEN, "%d-%02d-%02d %02d:%02d:%02d\n",
+    snprintf(pszCurTime, MAX_TIME_LEN, "%d-%02d-%02d %02d:%02d:%02d",
              t->tm_year + 1900,
              t->tm_mon + 1,
              t->tm_mday,

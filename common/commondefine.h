@@ -16,7 +16,7 @@ typedef unsigned char __UINT8;
 typedef unsigned int __UINT32;
 typedef int          __INT32;
 
-#define DWORD_SIZE 4
+#define DWORD_SIZE (4)
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
 #define MIN(a,b) ((a)<(b)?(a):(b))
